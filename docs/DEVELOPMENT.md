@@ -47,6 +47,27 @@ So expect the first Windows build to be close, but not guaranteed perfect. Work 
 If you hit a runtime error, the message is shown in a dialog and the full stack trace is in
 `%LOCALAPPDATA%\CharlieMJFocus\Logs\log-<date>.txt`.
 
+## Known warnings
+
+**`NU1903` — `SQLitePCLRaw.lib.e_sqlite3` 2.1.11 (CVE-2025-6965 / GHSA-2m69-gcr7-jv3q).**
+`Microsoft.Data.Sqlite` ships a bundled SQLite older than 3.50.2, and at the time of writing the advisory lists
+**no patched package version**. The flaw is triggered by attacker-supplied SQL; this app only ever executes its own
+fixed, parameterised statements and never accepts SQL from a user or the network, so practical exposure is very low.
+The warning is intentionally left visible. Re-check periodically:
+
+```powershell
+dotnet list package --vulnerable --include-transitive
+```
+
+When `Microsoft.Data.Sqlite` (or `SQLitePCLRaw.bundle_e_sqlite3`) is released with SQLite 3.50.2+, bump the version in
+`src/CharlieMJFocus.Infrastructure/CharlieMJFocus.Infrastructure.csproj`. If you ever add a feature that runs
+user-written SQL, treat this as a blocker.
+
+## SDK version
+
+`global.json` pins the .NET 10 SDK. Without it, a machine that also has a newer preview SDK installed (GitHub's
+Windows runners do) would silently build with the preview.
+
 ## Coding conventions
 
 * File-scoped namespaces, nullable reference types on, 4-space indentation (`.editorconfig` enforces it).

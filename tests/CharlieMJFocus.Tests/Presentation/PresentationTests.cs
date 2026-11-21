@@ -118,6 +118,19 @@ public sealed class PresentationTests
         Assert.Null(PhaseMessages.Describe(Result(TimerPhase.Focus, SessionOutcome.Completed, TimerMode.Stopwatch), TimerPhase.Focus, settings));
     }
 
+    /// <summary>Waits until a condition becomes true (polling), failing after a generous timeout. Avoids flaky fixed sleeps.</summary>
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        var deadline = DateTime.UtcNow.AddSeconds(5);
+
+        while (!condition() && DateTime.UtcNow < deadline)
+        {
+            await Task.Delay(10);
+        }
+
+        Assert.True(condition());
+    }
+
     // ------------------------------------------------------------ commands
 
     [Fact]
@@ -131,7 +144,7 @@ public sealed class PresentationTests
         {
             var command = new AsyncRelayCommand(() => throw new InvalidOperationException("boom"));
             command.Execute(null);
-            await Task.Delay(50);
+            await WaitUntilAsync(() => reported is not null && command.CanExecute(null));
 
             Assert.Equal("boom", reported?.Message);
             Assert.True(command.CanExecute(null)); // usable again afterwards
@@ -187,7 +200,7 @@ public sealed class PresentationTests
         h.Tasks.Reminder = ReminderChoice.Minutes5;
 
         h.Tasks.SaveCommand.Execute(null);
-        await Task.Delay(100);
+        await WaitUntilAsync(() => h.Repo.GetAllAsync().Result.Count == 1);
 
         var item = Assert.Single(await h.Repo.GetAllAsync());
         Assert.Equal(new DateTimeOffset(2026, 11, 21, 9, 30, 0, TimeSpan.Zero), item.ScheduledStart);
@@ -209,7 +222,7 @@ public sealed class PresentationTests
         h.Tasks.EndTimeText = end;
 
         h.Tasks.SaveCommand.Execute(null);
-        await Task.Delay(100);
+        await WaitUntilAsync(() => h.Tasks.HasError);
 
         Assert.True(h.Tasks.HasError);
         Assert.Contains(expectedFragment, h.Tasks.ErrorMessage, StringComparison.OrdinalIgnoreCase);

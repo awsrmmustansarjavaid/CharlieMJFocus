@@ -4,7 +4,8 @@
        anything that can be tested without a window belongs in the Presentation layer. -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- The version suffix sets the minimum Windows version (Windows 10 1809). -->
+    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <!-- Windows Forms is referenced ONLY for the system-tray NotifyIcon (WPF has none). -->
     <UseWindowsForms>true</UseWindowsForms>
@@ -15,7 +16,6 @@
     <RootNamespace>CharlieMJFocus.App</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
