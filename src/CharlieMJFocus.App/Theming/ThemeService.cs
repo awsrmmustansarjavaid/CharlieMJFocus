@@ -6,6 +6,10 @@ using CharlieMJFocus.Domain.Enums;
 using CharlieMJFocus.Domain.Settings;
 using Microsoft.Win32;
 
+// WPF 9+ also defines System.Windows.ThemeMode, which would make the plain name ambiguous.
+// The alias makes it explicit that we mean our own setting.
+using ThemeMode = CharlieMJFocus.Domain.Enums.ThemeMode;
+
 namespace CharlieMJFocus.App.Theming;
 
 /// <summary>
