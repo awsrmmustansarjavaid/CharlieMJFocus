@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Everything that touches the outside world: SQLite, files, logging. Implements the
+       interfaces declared in CharlieMJFocus.Application/Abstractions. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>CharlieMJFocus.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CharlieMJFocus.Domain\CharlieMJFocus.Domain.csproj" />
+    <ProjectReference Include="..\CharlieMJFocus.Application\CharlieMJFocus.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

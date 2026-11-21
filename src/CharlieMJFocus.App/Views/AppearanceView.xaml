@@ -1,0 +1,116 @@
+<UserControl x:Class="CharlieMJFocus.App.Views.AppearanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pages="clr-namespace:CharlieMJFocus.Presentation.Pages;assembly=CharlieMJFocus.Presentation">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{DynamicResource PagePadding}" MaxWidth="820" HorizontalAlignment="Left">
+
+            <TextBlock Text="Appearance" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="Changes apply instantly so you can preview them. Everything is saved automatically."
+                       Style="{StaticResource MutedText}" Margin="0,2,0,20"/>
+
+            <!-- Theme -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Theme" Style="{StaticResource SectionTitle}"/>
+                    <WrapPanel Margin="0,12,0,0">
+                        <RadioButton Style="{StaticResource Chip}" Content="Follow Windows"
+                                     IsChecked="{Binding ThemeMode, Converter={StaticResource Equals}, ConverterParameter=System}"/>
+                        <RadioButton Style="{StaticResource Chip}" Content="Light"
+                                     IsChecked="{Binding ThemeMode, Converter={StaticResource Equals}, ConverterParameter=Light}"/>
+                        <RadioButton Style="{StaticResource Chip}" Content="Dark"
+                                     IsChecked="{Binding ThemeMode, Converter={StaticResource Equals}, ConverterParameter=Dark}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Transparency -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Transparency" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,4,0,10"
+                               Text="Glass effects work with any theme: dark glass, light glass and so on."/>
+                    <WrapPanel>
+                        <RadioButton Style="{StaticResource Chip}" Content="Off (solid)"
+                                     IsChecked="{Binding Backdrop, Converter={StaticResource Equals}, ConverterParameter=None}"/>
+                        <RadioButton Style="{StaticResource Chip}" Content="Mica"
+                                     IsChecked="{Binding Backdrop, Converter={StaticResource Equals}, ConverterParameter=Mica}"/>
+                        <RadioButton Style="{StaticResource Chip}" Content="Acrylic (blur)"
+                                     IsChecked="{Binding Backdrop, Converter={StaticResource Equals}, ConverterParameter=Acrylic}"/>
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource ErrorText}"
+                               Text="Mica and Acrylic need Windows 11 (22H2 or newer). On this PC the window stays solid; the opacity slider below still works."
+                               Visibility="{Binding ShowBackdropNotice, Converter={StaticResource BoolToVis}}"/>
+
+                    <Grid Margin="0,14,0,0">
+                        <TextBlock Text="Window opacity" FontWeight="SemiBold"/>
+                        <TextBlock HorizontalAlignment="Right" Foreground="{DynamicResource MutedBrush}">
+                            <Run Text="{Binding OpacityPercent, Mode=OneWay, StringFormat={}{0:0}}"/><Run Text="%"/>
+                        </TextBlock>
+                    </Grid>
+                    <Slider Minimum="40" Maximum="100" Value="{Binding OpacityPercent, Mode=TwoWay}" Margin="0,8,0,0"/>
+                    <TextBlock Style="{StaticResource MutedText}" FontSize="12"
+                               Text="Very low opacity makes text harder to read. 40% is the minimum."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Accent -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Accent colour" Style="{StaticResource SectionTitle}"/>
+                    <ItemsControl ItemsSource="{x:Static pages:AppearanceViewModel.AccentPresets}" Margin="0,12,0,0">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Width="34" Height="34" Margin="0,0,10,10" Padding="0" BorderThickness="2"
+                                        Background="{Binding Converter={StaticResource HexToBrush}}"
+                                        ToolTip="{Binding}"
+                                        Command="{Binding DataContext.SelectAccentCommand, RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                        <TextBox Width="130" Text="{Binding AccentHex, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="A colour in the form #RRGGBB"/>
+                        <Border Width="34" Height="34" Margin="10,0,0,0" CornerRadius="{DynamicResource ControlRadius}"
+                                Background="{DynamicResource AccentBrush}"/>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource ErrorText}" Text="Use the form #RRGGBB, for example #526DE5."
+                               Visibility="{Binding IsAccentValid, Converter={StaticResource InverseBoolToVis}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Layout -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Layout" Style="{StaticResource SectionTitle}"/>
+                    <Grid Margin="0,14,0,0">
+                        <TextBlock Text="Text size" FontWeight="SemiBold"/>
+                        <TextBlock HorizontalAlignment="Right" Foreground="{DynamicResource MutedBrush}">
+                            <Run Text="{Binding FontSize, Mode=OneWay, StringFormat={}{0:0}}"/><Run Text=" pt"/>
+                        </TextBlock>
+                    </Grid>
+                    <Slider Minimum="11" Maximum="20" Value="{Binding FontSize, Mode=TwoWay}" Margin="0,8,0,8"/>
+                    <CheckBox Content="Rounded corners" IsChecked="{Binding RoundedCorners}"/>
+                    <CheckBox Content="Compact layout (tighter spacing)" IsChecked="{Binding CompactMode}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Window behaviour -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Window" Style="{StaticResource SectionTitle}"/>
+                    <CheckBox Content="Keep the window on top of other apps" IsChecked="{Binding AlwaysOnTop}" Margin="0,12,0,6"/>
+                    <CheckBox Content="Show the floating timer widget" IsChecked="{Binding ShowFloatingTimer}"/>
+                </StackPanel>
+            </Border>
+
+            <Button Content="Reset appearance to defaults" HorizontalAlignment="Left" Command="{Binding ResetCommand}"
+                    Margin="0,0,0,24"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

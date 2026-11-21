@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Use cases and service orchestration. Depends only on the Domain; talks to the
+       outside world exclusively through the interfaces in /Abstractions. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>CharlieMJFocus.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CharlieMJFocus.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CharlieMJFocus.Domain\CharlieMJFocus.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

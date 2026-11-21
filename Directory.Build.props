@@ -1,0 +1,15 @@
+<Project>
+  <!-- Shared compiler settings applied to every project in the solution. -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Company>Charlie MJ</Company>
+    <Product>Charlie MJ Focus</Product>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pure business rules. No UI, database or Windows references are allowed here. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>CharlieMJFocus.Domain</RootNamespace>
+  </PropertyGroup>
+
+</Project>

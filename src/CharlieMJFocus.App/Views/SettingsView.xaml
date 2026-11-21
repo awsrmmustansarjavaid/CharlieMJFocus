@@ -1,0 +1,96 @@
+<UserControl x:Class="CharlieMJFocus.App.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{DynamicResource PagePadding}" MaxWidth="820" HorizontalAlignment="Left">
+
+            <TextBlock Text="Settings" Style="{StaticResource PageTitle}" Margin="0,0,0,20"/>
+
+            <!-- Timer -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Timer" Style="{StaticResource SectionTitle}"/>
+                    <Grid Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="FOCUS (MINUTES)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding FocusMinutes, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="SHORT BREAK" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding ShortBreakMinutes, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="LONG BREAK" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding LongBreakMinutes, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="SESSIONS BEFORE LONG BREAK" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding SessionsBeforeLongBreak, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="DAILY GOAL (MINUTES)" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding DailyGoalMinutes, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                    </Grid>
+                    <CheckBox Content="Start the next phase automatically" IsChecked="{Binding AutoStartNextPhase}" Margin="0,16,0,0"/>
+                    <CheckBox Content="Play a sound when a phase ends" IsChecked="{Binding SoundEnabled}"/>
+                    <CheckBox Content="Show desktop notifications" IsChecked="{Binding NotificationsEnabled}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Windows -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Windows" Style="{StaticResource SectionTitle}"/>
+                    <CheckBox Content="Start Charlie MJ Focus when I sign in to Windows" IsChecked="{Binding StartWithWindows}" Margin="0,12,0,6"/>
+                    <CheckBox Content="Closing the window keeps the app running in the system tray" IsChecked="{Binding MinimizeToTrayOnClose}"/>
+                    <TextBlock Style="{StaticResource MutedText}" FontSize="12" Margin="0,8,0,0"
+                               Text="Global shortcuts: Ctrl+Alt+P start / pause, Ctrl+Alt+D count a distraction."/>
+                </StackPanel>
+            </Border>
+
+            <!-- Data -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Your data" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,4,0,8"
+                               Text="Everything is stored on this computer. Nothing is sent anywhere."/>
+                    <CheckBox Content="Back up my data automatically once a day" IsChecked="{Binding AutoBackup}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Back up now" Command="{Binding BackupNowCommand}" Margin="0,0,8,0"/>
+                        <Button Content="Open backup folder" Command="{Binding OpenBackupFolderCommand}" Margin="0,0,8,0"/>
+                        <Button Content="Open export folder" Command="{Binding OpenExportFolderCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding BackupFolder}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,8">
+                <Button Content="Save settings" Style="{StaticResource PrimaryButton}" Padding="22,10"
+                        Command="{Binding SaveCommand}"/>
+                <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="14,0,0,0"
+                           Foreground="{DynamicResource SuccessBrush}"
+                           Visibility="{Binding HasStatusMessage, Converter={StaticResource BoolToVis}}"/>
+            </StackPanel>
+
+            <TextBlock Text="{Binding VersionText}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,16,0,24"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

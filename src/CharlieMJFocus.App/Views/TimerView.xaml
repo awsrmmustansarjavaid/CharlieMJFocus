@@ -1,0 +1,100 @@
+<UserControl x:Class="CharlieMJFocus.App.Views.TimerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctrl="clr-namespace:CharlieMJFocus.App.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="{DynamicResource PagePadding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="340"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ============ The timer ============ -->
+            <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,16,0" Padding="28">
+                <StackPanel HorizontalAlignment="Center">
+
+                    <!-- Mode switch: only while idle, because changing mode mid-session would lose time -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,18">
+                        <RadioButton Style="{StaticResource Chip}" Content="Pomodoro"
+                                     IsChecked="{Binding IsPomodoro, Mode=OneWay}" IsEnabled="{Binding IsIdle}"
+                                     Command="{Binding SetModeCommand}" CommandParameter="Pomodoro"/>
+                        <RadioButton Style="{StaticResource Chip}" Content="Stopwatch"
+                                     IsChecked="{Binding IsStopwatch, Mode=OneWay}" IsEnabled="{Binding IsIdle}"
+                                     Command="{Binding SetModeCommand}" CommandParameter="Stopwatch"/>
+                    </StackPanel>
+
+                    <Border Background="{DynamicResource AccentSoftBrush}" CornerRadius="{DynamicResource ControlRadius}"
+                            Padding="12,8" Margin="0,0,0,14" HorizontalAlignment="Center"
+                            Visibility="{Binding ShowRecoveredNotice, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Your last session was recovered. Press Resume to continue." TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Progress ring with the time in the middle -->
+                    <Grid Width="320" Height="320">
+                        <ctrl:ProgressRing Progress="{Binding Progress}" Thickness="14"
+                                           TrackBrush="{DynamicResource CardAltBrush}"
+                                           ArcBrush="{DynamicResource AccentBrush}"/>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding PhaseText}" FontSize="16" HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource MutedBrush}"/>
+                            <TextBlock Text="{Binding DisplayTime}" FontSize="64" FontWeight="SemiBold"
+                                       FontFamily="Segoe UI Variable Display, Segoe UI" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding CycleText}" FontSize="13" HorizontalAlignment="Center"
+                                       Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding StatusText}" HorizontalAlignment="Center" Margin="0,16,0,0"
+                               Foreground="{DynamicResource MutedBrush}"/>
+
+                    <!-- Controls -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+                        <Button Style="{StaticResource PrimaryButton}" MinWidth="130" Padding="20,11" Margin="0,0,8,0"
+                                Content="{Binding PrimaryButtonText}" Command="{Binding StartPauseCommand}"/>
+                        <Button Content="Reset" Padding="18,11" Margin="0,0,8,0" Command="{Binding ResetCommand}"/>
+                        <Button Content="Skip break" Padding="18,11" Margin="0,0,8,0" Command="{Binding SkipBreakCommand}"
+                                Visibility="{Binding ShowSkip, Converter={StaticResource BoolToVis}}"/>
+                        <Button Content="Stop &amp; save" Padding="18,11" Command="{Binding StopStopwatchCommand}"
+                                Visibility="{Binding ShowStopStopwatch, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
+
+                    <Button HorizontalAlignment="Center" Margin="0,14,0,0" Padding="14,7"
+                            Command="{Binding DistractionCommand}" ToolTip="Hotkey: Ctrl+Alt+D (works from any app)">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="+ Distraction  "/>
+                            <TextBlock Text="{Binding DistractionCount}" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ What are you working on? ============ -->
+            <Border Grid.Column="1" Style="{StaticResource Card}" VerticalAlignment="Top">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="Focus on" Style="{StaticResource SectionTitle}"/>
+                        <Button Content="Clear" HorizontalAlignment="Right" Padding="12,4"
+                                Command="{Binding ClearTaskCommand}"
+                                Visibility="{Binding HasSelectedTask, Converter={StaticResource BoolToVis}}"/>
+                    </Grid>
+                    <TextBlock Style="{StaticResource MutedText}" Margin="0,4,0,10"
+                               Text="Pick a task and the time you focus is added to it."/>
+
+                    <ListBox ItemsSource="{Binding OpenTasks}" SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
+                             MaxHeight="420">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding Details}" Style="{StaticResource MutedText}" FontSize="12"
+                                               TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

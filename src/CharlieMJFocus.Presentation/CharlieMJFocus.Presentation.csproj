@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- View-models and UI-facing logic. Deliberately has NO reference to WPF so it can be
+       built and unit-tested on any machine; the WPF project only binds to it. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>CharlieMJFocus.Presentation</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lets the test project reach internal helpers such as TasksViewModel.BuildDraft. -->
+    <InternalsVisibleTo Include="CharlieMJFocus.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CharlieMJFocus.Domain\CharlieMJFocus.Domain.csproj" />
+    <ProjectReference Include="..\CharlieMJFocus.Application\CharlieMJFocus.Application.csproj" />
+  </ItemGroup>
+
+</Project>

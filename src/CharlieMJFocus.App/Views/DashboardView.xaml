@@ -1,0 +1,121 @@
+<UserControl x:Class="CharlieMJFocus.App.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{DynamicResource PagePadding}">
+
+            <TextBlock Text="{Binding Greeting}" Style="{StaticResource PageTitle}"/>
+            <TextBlock Text="{Binding DateText}" Style="{StaticResource MutedText}" Margin="0,2,0,22"/>
+
+            <!-- Today at a glance -->
+            <UniformGrid Columns="4">
+                <Border Style="{StaticResource Card}" Margin="0,0,12,12">
+                    <StackPanel>
+                        <TextBlock Text="FOCUS TODAY" Style="{StaticResource FieldLabel}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding FocusTodayText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,12,12">
+                    <StackPanel>
+                        <TextBlock Text="SESSIONS" Style="{StaticResource FieldLabel}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding SessionsToday}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,12,12">
+                    <StackPanel>
+                        <TextBlock Text="TASKS DONE TODAY" Style="{StaticResource FieldLabel}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TasksCompletedToday}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="FOCUS STREAK" Style="{StaticResource FieldLabel}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding StreakText}" Style="{StaticResource StatValue}"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Daily goal -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <Grid>
+                        <TextBlock Text="Daily focus goal" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text="{Binding GoalText}" HorizontalAlignment="Right"
+                                   Foreground="{DynamicResource MutedBrush}"/>
+                    </Grid>
+                    <ProgressBar Value="{Binding GoalPercent}" Margin="0,12,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Coming up -->
+                <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock Text="Coming up" Style="{StaticResource SectionTitle}"/>
+                            <Button Content="Open planner" HorizontalAlignment="Right" Padding="12,4"
+                                    Command="{Binding OpenPlannerCommand}"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding Upcoming}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Width="10" Height="10" Margin="0,5,12,0" VerticalAlignment="Top"
+                                                 Fill="{Binding PriorityName, Converter={StaticResource PriorityBrush}}"/>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding Details}" Style="{StaticResource MutedText}" FontSize="12"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Style="{StaticResource MutedText}" Margin="0,6,0,0"
+                                   Text="Nothing scheduled yet. Add a task with a start time to see it here."
+                                   Visibility="{Binding HasUpcoming, Converter={StaticResource InverseBoolToVis}}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Quick actions -->
+                <Border Grid.Column="1" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Quick add" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text="Adds a task due today." Style="{StaticResource MutedText}" Margin="0,2,0,10"/>
+                        <TextBox Text="{Binding QuickTaskTitle, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding AddQuickTaskCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <TextBlock Text="{Binding QuickTaskError}" Style="{StaticResource ErrorText}"
+                                   Visibility="{Binding HasQuickTaskError, Converter={StaticResource BoolToVis}}"/>
+                        <Button Content="Add task" Style="{StaticResource PrimaryButton}" Margin="0,10,0,0"
+                                HorizontalAlignment="Left" Command="{Binding AddQuickTaskCommand}"/>
+
+                        <Separator Margin="0,18" Background="{DynamicResource LineBrush}"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Start focusing" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0"
+                                    Command="{Binding OpenTimerCommand}"/>
+                            <Button Content="All tasks" Command="{Binding OpenTasksCommand}"/>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource MutedText}" Margin="0,14,0,0" FontSize="12"
+                                   Text="Tip: Ctrl+Alt+P starts or pauses the timer from any app."/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
