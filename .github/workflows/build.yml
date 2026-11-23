@@ -1,72 +1,116 @@
-name: Build and test
+name: Build, test and package
 
 on:
   push:
     branches: [main]
     tags: ['v*']
   pull_request:
-  # Adds a "Run workflow" button on the Actions tab, so you can build a fresh .exe at any time.
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  verify:
+    name: Restore, build and test
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out source
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
 
-      - name: Restore
+      - name: Restore dependencies
         run: dotnet restore CharlieMJFocus.sln
 
-      - name: Build
+      - name: Build solution
         run: dotnet build CharlieMJFocus.sln -c Release --no-restore
 
-      - name: Test
+      - name: Run automated tests
         run: dotnet test CharlieMJFocus.sln -c Release --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: charlie-mj-focus-test-results
           path: '**/test-results.trx'
+          if-no-files-found: warn
+          retention-days: 14
 
-  # Builds the portable Windows .exe after every successful build on main (and for pull requests'
-  # manual runs). Download it from the run's "Artifacts" section on the Actions tab.
   portable:
+    name: Package portable Windows app
     if: github.event_name != 'pull_request'
-    needs: build
+    needs: verify
     runs-on: windows-latest
-    permissions:
-      contents: write   # only needed to attach the zip to a GitHub Release on version tags
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-
-      - name: Publish portable package
+      - name: Publish portable single-file executable
         shell: pwsh
         run: ./scripts/publish-portable.ps1
-
-      # The artifact is the ready-to-run folder: CharlieMJFocus.exe + portable.flag.
-      - name: Upload portable app
+      - name: Upload portable package
         uses: actions/upload-artifact@v4
         with:
-          name: CharlieMJFocus-portable-win-x64
-          path: artifacts/portable/CharlieMJFocus/*
+          name: Charlie-MJ-Focus-Portable-Windows-x64
+          path: |
+            artifacts/portable/Charlie MJ Focus/**
+            artifacts/portable/*.zip
           if-no-files-found: error
+          retention-days: 30
 
-      # Pushing a tag such as v0.1.0 also creates a public GitHub Release with the zip attached.
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+  installer:
+    name: Build Windows installer
+    if: github.event_name != 'pull_request'
+    needs: verify
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Install Inno Setup 6
+        shell: pwsh
+        run: choco install innosetup --yes --no-progress
+      - name: Publish and package installer
+        shell: pwsh
+        run: ./scripts/publish-installer.ps1
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Charlie-MJ-Focus-Windows-Installer-x64
+          path: artifacts/installer/*.exe
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [portable, installer]
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download portable package
+        uses: actions/download-artifact@v4
+        with:
+          name: Charlie-MJ-Focus-Portable-Windows-x64
+          path: release-assets/portable
+      - name: Download installer
+        uses: actions/download-artifact@v4
+        with:
+          name: Charlie-MJ-Focus-Windows-Installer-x64
+          path: release-assets/installer
+      - name: Publish release assets
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $zip = Get-ChildItem artifacts/portable/*.zip | Select-Object -First 1
-          gh release create "${{ github.ref_name }}" $zip.FullName --title "Charlie MJ Focus ${{ github.ref_name }}" --generate-notes
+          $assets = Get-ChildItem release-assets -Recurse -File | ForEach-Object { $_.FullName }
+          if (-not $assets) { throw 'No release assets were downloaded.' }
+          gh release create "${{ github.ref_name }}" $assets --title "Charlie MJ Focus ${{ github.ref_name }}" --generate-notes

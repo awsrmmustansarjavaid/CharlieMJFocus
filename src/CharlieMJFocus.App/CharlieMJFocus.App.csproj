@@ -12,9 +12,14 @@
     <!-- WPF + WinForms together create ambiguous type names, so global usings are switched off here. -->
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>CharlieMJFocus</AssemblyName>
+    <AssemblyName>Charlie MJ Focus</AssemblyName>
+    <AssemblyTitle>Charlie MJ Focus</AssemblyTitle>
+    <Product>Charlie MJ Focus</Product>
+    <Company>Charlie MJ</Company>
+    <FileVersion>0.1.0.0</FileVersion>
+    <InformationalVersion>0.1.0</InformationalVersion>
     <RootNamespace>CharlieMJFocus.App</RootNamespace>
-    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\CharlieMJFocus.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
@@ -32,7 +37,7 @@
 
   <ItemGroup>
     <!-- Embedded so the tray icon can be loaded from inside the single-file executable. -->
-    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\CharlieMJFocus.ico" />
   </ItemGroup>
 
 </Project>

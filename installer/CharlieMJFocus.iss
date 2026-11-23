@@ -12,7 +12,7 @@
 #endif
 
 #define AppName "Charlie MJ Focus"
-#define AppExe  "CharlieMJFocus.exe"
+#define AppExe  "Charlie MJ Focus.exe"
 
 [Setup]
 ; A fixed AppId lets new versions upgrade the old one in place. Never change it after release.
@@ -24,8 +24,8 @@ DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir={#OutputDir}
-OutputBaseFilename=CharlieMJFocus-Setup-{#AppVersion}
-SetupIconFile=..\assets\app.ico
+OutputBaseFilename=Charlie-MJ-Focus-Setup-{#AppVersion}
+SetupIconFile=..\assets\CharlieMJFocus.ico
 UninstallDisplayIcon={app}\{#AppExe}
 Compression=lzma2
 SolidCompression=yes

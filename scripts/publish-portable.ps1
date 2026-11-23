@@ -4,7 +4,7 @@
 .DESCRIPTION
     The flag file tells the app to keep all of its data in a "Data" folder next to the EXE
     instead of %LOCALAPPDATA%, so the whole folder can live on a USB stick.
-    Output: artifacts/portable/CharlieMJFocus-<version>-portable-win-x64.zip
+    Output: artifacts/portable/Charlie-MJ-Focus-<version>-portable-win-x64.zip
 #>
 [CmdletBinding()]
 param()
@@ -15,7 +15,7 @@ Push-Location $root
 
 try {
     $version = ([xml](Get-Content 'Directory.Build.props')).Project.PropertyGroup.Version | Select-Object -First 1
-    $out = Join-Path $root 'artifacts/portable/CharlieMJFocus'
+    $out = Join-Path $root 'artifacts/portable/Charlie MJ Focus'
 
     if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 
@@ -29,7 +29,7 @@ try {
     # Marks this copy as portable.
     Set-Content -Path (Join-Path $out 'portable.flag') -Value 'Delete this file to store data in %LOCALAPPDATA% instead.'
 
-    $zip = Join-Path $root "artifacts/portable/CharlieMJFocus-$version-portable-win-x64.zip"
+    $zip = Join-Path $root "artifacts/portable/Charlie-MJ-Focus-$version-portable-win-x64.zip"
     if (Test-Path $zip) { Remove-Item $zip -Force }
     Compress-Archive -Path (Join-Path $out '*') -DestinationPath $zip
 

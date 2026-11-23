@@ -167,7 +167,7 @@ public partial class App : System.Windows.Application
 
     private void CreateTray(MainWindow window, ShellIntegration integration)
     {
-        using var stream = GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico")).Stream;
+        using var stream = GetResourceStream(new Uri("pack://application:,,,/Assets/CharlieMJFocus.ico")).Stream;
 
         _tray = new TrayService(
             new Icon(stream),

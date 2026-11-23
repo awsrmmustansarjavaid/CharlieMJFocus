@@ -4,7 +4,7 @@
 .DESCRIPTION
     Requires Inno Setup 6 (https://jrsoftware.org/isinfo.php). ISCC.exe is looked up on PATH
     and in the default install folders.
-    Output: artifacts/installer/CharlieMJFocus-Setup-<version>.exe
+    Output: artifacts/installer/Charlie-MJ-Focus-Setup-<version>.exe
 #>
 [CmdletBinding()]
 param()
