@@ -28,7 +28,7 @@ Version 0.1.0 was authored in an environment with no Windows desktop or NuGet ac
 | SQLite SQL | The real migration script and every repository query were executed against SQLite and checked (schema, constraints, overlap and reminder queries, UPSERT) |
 | Infrastructure C# | Type-checked against a stub of the `Microsoft.Data.Sqlite` API; **not run against the real package** |
 | XAML | Well-formedness, every `{StaticResource}`/`{DynamicResource}` key, bindings versus view-model members, event handlers and `x:Class` names were checked by script; **never rendered** |
-| WPF C# (`CharlieMJFocus.App`) | **Not compiled.** Reviewed by hand only |
+| WPF C# (`CharlieMJFocus.App`) | Authored without a Windows toolchain. Compiled for the first time by GitHub Actions: one name clash (`ThemeMode`) was found and fixed, after which the build and all tests passed on `windows-latest` |
 
 So expect the first Windows build to be close, but not guaranteed perfect. Work through this list:
 

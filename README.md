@@ -4,10 +4,9 @@ A focus and planning app for Windows: **Pomodoro timer + time-based to-do list +
 with light, dark and transparent (Mica / Acrylic) themes. Everything is stored on your own computer.
 No account, no internet connection, no tracking.
 
-> **Status: version 0.1.0 (first build).** The business logic is covered by 128 automated tests. The WPF
-> screens and the SQLite layer were written without access to a Windows machine, so **the first thing to do
-> is build it and run it** (see [Getting started](#getting-started)). The included GitHub Actions workflow
-> does this on every push. Details in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#first-build-checklist).
+> **Status: version 0.1.0 (first build).** It builds and passes its 128 automated tests on GitHub Actions.
+> The screens have not been reviewed on a real desktop yet, so expect some visual polish to be needed.
+> Details in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#first-build-checklist).
 
 ## Features
 
@@ -36,6 +35,23 @@ No account, no internet connection, no tracking.
 Dark/Light and transparency are independent, so every combination works (dark glass, light glass…).
 Mica and Acrylic need **Windows 11 22H2 or newer**; on Windows 10 the window stays solid and the opacity slider still works.
 Text can become hard to read at very low opacity, so the slider stops at 40 %.
+
+## Download the portable .exe
+
+You do not need to install .NET or Visual Studio. GitHub builds the app for you:
+
+1. Open your repository on GitHub → **Actions** tab → **Build and test**.
+2. Click the newest run (it needs a green tick) and scroll down to **Artifacts**.
+3. Download **CharlieMJFocus-portable-win-x64**, unzip it anywhere, and double-click **CharlieMJFocus.exe**.
+
+To build a fresh one at any time: Actions → Build and test → **Run workflow**.
+For a permanent public download link, publish a release: `git tag v0.1.0` then `git push origin v0.1.0`.
+The workflow then creates a GitHub Release with the zip attached.
+
+Notes:
+* The `portable.flag` file next to the EXE keeps all your data in a `Data` folder beside it (nothing is written to the PC). Delete the flag to use `%LOCALAPPDATA%` instead.
+* The first start is a little slower because the single-file EXE unpacks its native libraries once.
+* The EXE is not code-signed, so Windows SmartScreen may say "unknown publisher": choose **More info → Run anyway**.
 
 ## Getting started
 
