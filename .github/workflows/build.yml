@@ -1,7 +1,19 @@
 name: Build, test and package
 
+# ============================================================
+# WORKFLOW TRIGGERS
+# ============================================================
+# This workflow runs ONLY when manually triggered from GitHub.
+#
+# No automatic execution on:
+# - Git commits
+# - Git pushes
+# - Pull requests
+# - Version tags
+# ============================================================
+
 on:
-  push:
+  workflow_dispatch:
     branches: [main]
     tags: ['v*']
   pull_request:
