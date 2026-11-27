@@ -12,21 +12,29 @@
 #endif
 
 #define AppName "Charlie MJ Focus"
-#define AppExe  "Charlie MJ Focus.exe"
+#define AppExe  "CharlieMJFocus.exe"
 
 [Setup]
 ; A fixed AppId lets new versions upgrade the old one in place. Never change it after release.
 AppId={{7B3F2C1E-5A64-4D1B-9C80-3E2A91D4F6B7}
 AppName={#AppName}
 AppVersion={#AppVersion}
+AppVerName={#AppName} {#AppVersion}
 AppPublisher=Charlie MJ
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir={#OutputDir}
 OutputBaseFilename=Charlie-MJ-Focus-Setup-{#AppVersion}
+VersionInfoVersion={#AppVersion}
+VersionInfoProductName={#AppName}
+VersionInfoDescription={#AppName} Setup
+; Branding
 SetupIconFile=..\assets\CharlieMJFocus.ico
 UninstallDisplayIcon={app}\{#AppExe}
+WizardImageFile=..\assets\branding\installer-wizard.bmp
+WizardSmallImageFile=..\assets\branding\installer-small.bmp
+LicenseFile=..\LICENSE
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
@@ -45,6 +53,7 @@ Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs 
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExe}"
+Name: "{group}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
 
 [Run]

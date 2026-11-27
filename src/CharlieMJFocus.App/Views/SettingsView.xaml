@@ -90,7 +90,21 @@
                            Visibility="{Binding HasStatusMessage, Converter={StaticResource BoolToVis}}"/>
             </StackPanel>
 
-            <TextBlock Text="{Binding VersionText}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,16,0,24"/>
+            <!-- About -->
+            <Border Style="{StaticResource Card}" Margin="0,16,0,24">
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="56" Height="56" CornerRadius="12">
+                        <Border.Background>
+                            <ImageBrush ImageSource="pack://application:,,,/Assets/CharlieMJFocus-Logo-256.png" Stretch="UniformToFill"/>
+                        </Border.Background>
+                    </Border>
+                    <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding VersionText}" FontWeight="SemiBold" FontSize="16"/>
+                        <TextBlock Style="{StaticResource MutedText}" FontSize="12" Margin="0,2,0,0"
+                                   Text="Plan. Focus. Finish. Offline-first, your data stays on this PC."/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

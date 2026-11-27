@@ -1,6 +1,6 @@
 # Feature status
 
-✅ implemented in supplied baseline · 🟡 partly implemented · ⬜ planned / not implemented
+✅ implemented · 🟡 partly · ⬜ not yet
 
 ## Timer
 | Feature | Status | Notes |
@@ -72,6 +72,8 @@
 | Always on top | ✅ | |
 | Floating timer widget | ✅ | |
 | Custom background / text colours | ⬜ | |
+| Charlie MJ Focus logo, app icon, installer artwork | ✅ | See [BRANDING.md](BRANDING.md) |
+| Splash screen | ⬜ | Starts fast enough not to need one |
 
 ## Windows and data
 | Feature | Status | Notes |
@@ -83,42 +85,7 @@
 | Automatic daily backup + manual backup | ✅ | |
 | Restore from backup | 🟡 | Manual file copy (see README); no button yet |
 | Portable mode | ✅ | `portable.flag` |
-| Installer | ✅ | Inno Setup script |
+| Installer (Setup.exe) | ✅ | Inno Setup; built and published by CI |
 | Ambient sounds | ⬜ | |
 | Focus profiles, app / website blocking | ⬜ | Intentionally postponed: needs careful, safe design |
 | Cloud sync, calendar integrations | ⬜ | Local-first by design |
-
-
-## Expanded product scope (approved; implementation status)
-
-The following items are part of the approved all-features Charlie MJ Focus scope. They are not yet implemented unless marked otherwise above.
-
-| Feature | Status | Delivery stage | Notes |
-| --- | --- | --- | --- |
-| Premium dashboard navigation and visual refresh | 🟡 | Foundation | Existing WPF shell and theme support are present; full dashboard redesign requires Windows visual QA |
-| Daily / weekly / monthly goals | 🟡 | Core workflow | Daily focus goal exists; weekly and monthly goal tracking planned |
-| Project workspaces | ⬜ | Stage 1 | Replace free-text category-only grouping with project entities |
-| Subtasks and checklists | ⬜ | Stage 1 | Parent-child task relationship and completion roll-up |
-| Kanban board | ⬜ | Stage 1 | To Do / In Progress / On Hold / Done / Cancelled workflow |
-| Task tags and saved filters | ⬜ | Stage 1 | Multi-tag filtering and quick views |
-| Distraction-free full-screen focus | ⬜ | Stage 1 | Full-screen timer with clear exit and pause controls |
-| Focus-session notes | ⬜ | Stage 1 | Notes linked to a saved focus session |
-| User-configurable global shortcuts | ⬜ | Stage 1 | Conflict detection and reset-to-default |
-| In-app backup restore workflow | 🟡 | Stage 1 | Backup service exists; guided validation and restore UI planned |
-| Weekly / monthly / agenda planner | ⬜ | Stage 2 | Existing daily planner retained |
-| Drag / resize time blocks with undo | ⬜ | Stage 2 | Include overlap warnings and keyboard alternative |
-| Quick notes, scratchpad and journal | ⬜ | Stage 2 | Local-first notes module |
-| Meeting notes | ⬜ | Stage 2 | Searchable notes with date and project links |
-| Reusable task / project templates | ⬜ | Stage 2 | User-created templates |
-| Focus calendar heatmap | ⬜ | Stage 3 | Derived from recorded focus sessions |
-| Custom analytics date ranges | ⬜ | Stage 3 | Preserve existing preset periods |
-| PDF reports | ⬜ | Stage 3 | Offline report generation |
-| Project / tag time reports | ⬜ | Stage 3 | Requires project and tag entities |
-| Named focus profiles | ⬜ | Stage 3 | Timer duration, break pattern and sound preferences |
-| Ambient audio | ⬜ | Stage 3 | Opt-in, independently muted and stopped on exit |
-| Calendar integration | ⬜ | Stage 4 | Optional; conflict preview before applying changes |
-| Encrypted cross-device sync | ⬜ | Stage 4 | Optional; requires explicit data and conflict-resolution design |
-| App / website blocking profiles | ⬜ | Stage 4 | Optional, user-controlled, visible and easy to disable |
-| Automation rules | ⬜ | Stage 4 | Suggestions and reminders first; no silent destructive actions |
-
-For sequencing and acceptance criteria, see [PRODUCT-ROADMAP.md](PRODUCT-ROADMAP.md).

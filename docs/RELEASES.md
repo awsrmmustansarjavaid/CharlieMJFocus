@@ -1,37 +1,63 @@
-# Build and release guide
+# Releases and downloads
 
-## Artifact names
+## What the workflow produces
 
-- Portable ZIP: `Charlie-MJ-Focus-<version>-portable-win-x64.zip`
-- Portable executable inside the ZIP: `Charlie MJ Focus.exe`
-- Installer: `Charlie-MJ-Focus-Setup-<version>.exe`
+`.github/workflows/build.yml` ("Build, test and package") runs on every push to `main`, on pull requests, and on demand
+(**Actions → Build, test and package → Run workflow**).
 
-## Local build (Windows)
+| Job | Output | Artifact name |
+| --- | --- | --- |
+| `verify` | Build + all tests | `Charlie-MJ-Focus-Test-Results` |
+| `portable` | `Charlie-MJ-Focus.exe` + `portable.flag` + `README-portable.txt` | `Charlie-MJ-Focus-Windows-Portable` |
+| `installer` | `Charlie-MJ-Focus-Setup-<version>.exe` | `Charlie-MJ-Focus-Windows-Installer` |
+| `smoke-test` | Screenshots of every page, app logs | `Charlie-MJ-Focus-UI-Screenshots` |
+| `release` | A GitHub Release (version tags only) | the portable `.zip` and the `Setup.exe` |
 
-1. Install .NET 10 SDK.
-2. Run `./scripts/build.ps1`.
-3. Run `./scripts/publish-portable.ps1` for the portable package.
-4. Install Inno Setup 6 and run `./scripts/publish-installer.ps1` for Setup.exe.
-5. Inspect files under `artifacts/` before distributing them.
+`portable` and `installer` only run after `verify` succeeds. `release` needs both packages but does not wait for the
+screenshot job, so a flaky screenshot can never block a release.
 
-## GitHub release
+## Downloading a build
 
-1. Push the repository to GitHub and ensure the default branch is `main`.
-2. Confirm Actions is enabled and the workflow is allowed to create releases with `contents: write` on the release job.
-3. Push a semantic version tag, for example `v0.2.0`.
-4. Wait for `verify`, `portable` and `installer` jobs to pass.
-5. Confirm the GitHub Release contains the portable ZIP and Setup.exe.
-6. Test both downloads on a clean Windows x64 VM.
+1. Repository → **Actions** → open the newest run with a green tick.
+2. Scroll to **Artifacts** at the bottom of the page.
+3. Download `Charlie-MJ-Focus-Windows-Portable` (unzip, run `Charlie-MJ-Focus.exe`) or
+   `Charlie-MJ-Focus-Windows-Installer` (unzip, run the Setup).
 
-The workflow uses GitHub-hosted Windows runners and installs Inno Setup through Chocolatey. A release is not published if either package job fails.
+GitHub zips every artifact, so the download is a `.zip` containing the `.exe`. Artifacts expire after 30 days.
+For permanent downloads, publish a release.
 
-## Signing
+## Publishing a release
 
-The current build is unsigned. To reduce SmartScreen warnings for public distribution, obtain a trusted code-signing certificate and add signing to the Windows packaging pipeline using GitHub Actions secrets / a protected signing environment. Never commit a `.pfx`, private key, password or signing token to the repository.
+```powershell
+# 1. Edit <Version> in Directory.Build.props and add notes to CHANGELOG.md, commit, push.
+# 2. Tag and push:
+git tag v0.1.0
+git push origin v0.1.0
+```
 
-## Data safety checks
+The `release` job then creates the release with notes generated from your commits and attaches:
 
-- Installer upgrade must preserve `%LOCALAPPDATA%\CharlieMJFocus\`.
-- Uninstall must not remove the user database or backups.
-- Portable mode must keep its `Data` folder beside the portable EXE while `portable.flag` exists.
-- Test database backup and restore before each release that changes the schema.
+* `Charlie-MJ-Focus-v0.1.0-portable-win-x64.zip` (contains `Charlie-MJ-Focus.exe`)
+* `Charlie-MJ-Focus-Setup-0.1.0.exe`
+
+The tag must start with `v`. The version inside the installer comes from `Directory.Build.props`, so keep it in step with the tag.
+
+## Building locally
+
+```powershell
+./scripts/publish-portable.ps1     # artifacts/portable/
+./scripts/publish-installer.ps1    # artifacts/installer/ (needs Inno Setup 6)
+./scripts/smoke-test.ps1 -AppDir artifacts/portable/Charlie-MJ-Focus
+```
+
+## File names
+
+The compiled program is called `CharlieMJFocus.exe` (no spaces, which keeps WPF resource paths and scripts safe).
+The portable script renames it to `Charlie-MJ-Focus.exe`. What users see in file properties, Task Manager, the Start
+Menu and the installer is **"Charlie MJ Focus"**, set in the project metadata.
+
+## Code signing
+
+The files are unsigned, so Windows SmartScreen shows "unknown publisher" until the app builds reputation. To remove the
+warning you need a code-signing certificate; add a signing step to the `portable` and `installer` jobs (for example with
+`signtool`) and store the certificate in GitHub Secrets.

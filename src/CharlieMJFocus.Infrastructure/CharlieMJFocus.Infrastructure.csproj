@@ -14,6 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+
+    <!-- SECURITY: Microsoft.Data.Sqlite 10.x pulls in SQLitePCLRaw.lib.e_sqlite3 2.1.11, which bundles
+         SQLite 3.49.1 and is flagged by GHSA-2m69-gcr7-jv3q / CVE-2025-6965 (fixed in SQLite 3.50.2).
+         Referencing the native-library package directly overrides that transitive version with a build
+         of SQLite 3.50.3. Only the native binary changes; the managed API the app uses is the same.
+         Remove this line once Microsoft.Data.Sqlite itself ships with a patched native library. -->
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
   </ItemGroup>
 

@@ -12,16 +12,19 @@
     <!-- WPF + WinForms together create ambiguous type names, so global usings are switched off here. -->
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Charlie MJ Focus</AssemblyName>
+    <!-- Internal file name stays free of spaces (safe for WPF resource URIs and scripts).
+         The name users see (file properties, Task Manager, installer) comes from the metadata below. -->
+    <AssemblyName>CharlieMJFocus</AssemblyName>
     <AssemblyTitle>Charlie MJ Focus</AssemblyTitle>
-    <Product>Charlie MJ Focus</Product>
-    <Company>Charlie MJ</Company>
-    <FileVersion>0.1.0.0</FileVersion>
-    <InformationalVersion>0.1.0</InformationalVersion>
+    <Description>Charlie MJ Focus: Pomodoro timer, time-based tasks, daily planner and analytics.</Description>
+    <Copyright>Copyright (c) 2026 Charlie MJ</Copyright>
     <RootNamespace>CharlieMJFocus.App</RootNamespace>
     <ApplicationIcon>Assets\CharlieMJFocus.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- WFAC010 is a WinForms hint about DPI settings in the manifest. This is a WPF app that uses
+         WinForms only for the tray icon, and WPF needs the manifest entry for per-monitor DPI. -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,8 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Embedded so the tray icon can be loaded from inside the single-file executable. -->
+    <!-- Embedded so the icon and logo load from inside the single-file executable. -->
     <Resource Include="Assets\CharlieMJFocus.ico" />
+    <Resource Include="Assets\CharlieMJFocus-Logo-256.png" />
   </ItemGroup>
 
 </Project>

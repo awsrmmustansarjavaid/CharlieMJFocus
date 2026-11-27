@@ -57,7 +57,7 @@ public partial class App : System.Windows.Application
 
         try
         {
-            await StartAsync(startMinimized: e.Args.Contains("--minimized", StringComparer.OrdinalIgnoreCase));
+            await StartAsync(e.Args);
         }
         catch (Exception ex)
         {
@@ -69,9 +69,19 @@ public partial class App : System.Windows.Application
         }
     }
 
-    private async Task StartAsync(bool startMinimized)
+    /// <summary>
+    /// Starts the application. Besides <c>--minimized</c> (used by "Start with Windows"), a few options exist
+    /// for demos and automated screenshot tests: <c>--demo</c> (fill an empty database with sample data),
+    /// <c>--page=Tasks</c>, <c>--theme=Dark</c> and <c>--backdrop=Mica</c>.
+    /// </summary>
+    private async Task StartAsync(string[] args)
     {
-        var paths = AppPaths.Resolve(AppContext.BaseDirectory);
+        var startMinimized = args.Contains("--minimized", StringComparer.OrdinalIgnoreCase);
+
+        // The folder of the running EXE decides portable vs installed mode. ProcessPath is used because it is
+        // the real location of a single-file executable, whatever the app was renamed to.
+        var appDirectory = System.IO.Path.GetDirectoryName(Environment.ProcessPath) ?? AppContext.BaseDirectory;
+        var paths = AppPaths.Resolve(appDirectory);
 
         _services = ConfigureServices(paths);
         _logger = _services.GetRequiredService<IAppLogger>();
@@ -86,10 +96,22 @@ public partial class App : System.Windows.Application
 
         await _services.GetRequiredService<DatabaseMigrator>().MigrateAsync();
 
+        if (args.Contains("--demo", StringComparer.OrdinalIgnoreCase))
+        {
+            await _services.GetRequiredService<DemoDataService>().SeedIfEmptyAsync();
+        }
+
         _shell = _services.GetRequiredService<ShellViewModel>();
         await _shell.InitializeAsync();
 
         var settings = _services.GetRequiredService<SettingsService>();
+        await ApplyStartupOverridesAsync(args, settings);
+
+        if (Enum.TryParse<PageKey>(ArgValue(args, "--page"), ignoreCase: true, out var startPage))
+        {
+            await _shell.NavigateAsync(startPage);
+        }
+
         var integration = _services.GetRequiredService<ShellIntegration>();
 
         // Colours and sizes must exist before any window is created, because the XAML looks them up.
@@ -124,6 +146,33 @@ public partial class App : System.Windows.Application
         await RunAutomaticBackupAsync(settings.Current);
     }
 
+    /// <summary>Applies --theme and --backdrop (testing options) on top of the saved settings.</summary>
+    private static async Task ApplyStartupOverridesAsync(string[] args, SettingsService settings)
+    {
+        var hasTheme = Enum.TryParse<Domain.Enums.ThemeMode>(ArgValue(args, "--theme"), ignoreCase: true, out var theme);
+        var hasBackdrop = Enum.TryParse<Domain.Enums.BackdropStyle>(ArgValue(args, "--backdrop"), ignoreCase: true, out var backdrop);
+
+        if (hasTheme || hasBackdrop)
+        {
+            await settings.UpdateAsync(s => s with
+            {
+                Appearance = s.Appearance with
+                {
+                    ThemeMode = hasTheme ? theme : s.Appearance.ThemeMode,
+                    Backdrop = hasBackdrop ? backdrop : s.Appearance.Backdrop
+                }
+            });
+        }
+    }
+
+    /// <summary>Returns the text after "--name=" from the command line, or null when absent.</summary>
+    private static string? ArgValue(string[] args, string name)
+    {
+        var prefix = name + "=";
+        var match = args.FirstOrDefault(a => a.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+        return match?[prefix.Length..];
+    }
+
     private static ServiceProvider ConfigureServices(AppPaths paths)
     {
         var services = new ServiceCollection();
@@ -138,6 +187,7 @@ public partial class App : System.Windows.Application
         services.AddSingleton<PlannerService>();
         services.AddSingleton<StatisticsService>();
         services.AddSingleton<ExportService>();
+        services.AddSingleton<DemoDataService>();
 
         // View-models. Singletons: pages keep their state while the user moves around.
         services.AddSingleton<NavigationService>();

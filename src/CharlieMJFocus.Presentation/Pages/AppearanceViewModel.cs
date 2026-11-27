@@ -15,7 +15,7 @@ public sealed class AppearanceViewModel : PageViewModel
     /// <summary>Accent colours offered as one-click presets.</summary>
     public static IReadOnlyList<string> AccentPresets { get; } =
     [
-        "#526DE5", "#7C5CFF", "#0EA5A4", "#16A34A", "#F59E0B", "#E5484D", "#EC4899", "#64748B"
+        "#526DE5", "#00B8D4", "#7C5CFF", "#0EA5A4", "#16A34A", "#F59E0B", "#E5484D", "#EC4899", "#64748B"
     ];
 
     private const int SaveDelayMilliseconds = 150;

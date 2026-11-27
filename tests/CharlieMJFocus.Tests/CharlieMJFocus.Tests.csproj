@@ -21,6 +21,8 @@
     <ProjectReference Include="..\..\src\CharlieMJFocus.Domain\CharlieMJFocus.Domain.csproj" />
     <ProjectReference Include="..\..\src\CharlieMJFocus.Application\CharlieMJFocus.Application.csproj" />
     <ProjectReference Include="..\..\src\CharlieMJFocus.Presentation\CharlieMJFocus.Presentation.csproj" />
+    <!-- Needed by Integration/ tests, which exercise the real SQLite database. -->
+    <ProjectReference Include="..\..\src\CharlieMJFocus.Infrastructure\CharlieMJFocus.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
