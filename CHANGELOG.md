@@ -18,6 +18,7 @@ First version of Charlie MJ Focus.
 - Main window no longer opens taller than a 1366 x 768 screen.
 
 ### Fixed
+- Package jobs now verify that the EXE exists and is a sensible size, and publish its size and SHA-256 on the run summary.
 - Opening the Dashboard crashed at startup: a progress bar bound two-way to a read-only property. Found by the CI
   launch test; a new XAML binding test now prevents this whole class of mistake.
 

@@ -64,6 +64,11 @@ jobs:
         shell: pwsh
         run: ./scripts/publish-portable.ps1
 
+      # Fails the job if the EXE is missing or tiny, and records its size and SHA-256 on the run summary.
+      - name: Verify portable package
+        shell: pwsh
+        run: ./scripts/verify-package.ps1 -Directory artifacts/portable/Charlie-MJ-Focus -ExeFilter 'Charlie-MJ-Focus.exe' -Title 'Portable package'
+
       # The artifact is the ready-to-run folder: Charlie-MJ-Focus.exe, portable.flag and a short README.
       - name: Upload portable app
         uses: actions/upload-artifact@v4
@@ -96,6 +101,10 @@ jobs:
       - name: Build installer
         shell: pwsh
         run: ./scripts/publish-installer.ps1
+
+      - name: Verify installer
+        shell: pwsh
+        run: ./scripts/verify-package.ps1 -Directory artifacts/installer -ExeFilter 'Charlie-MJ-Focus-Setup-*.exe' -Title 'Installer'
 
       - name: Upload installer
         uses: actions/upload-artifact@v4

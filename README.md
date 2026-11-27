@@ -32,6 +32,7 @@ You do not need Visual Studio or .NET. GitHub builds both editions for you.
   `Charlie-MJ-Focus-Windows-Portable`, `Charlie-MJ-Focus-Windows-Installer` and `Charlie-MJ-Focus-UI-Screenshots`.
 
 The files are not code-signed, so Windows SmartScreen may say "unknown publisher": choose **More info → Run anyway**.
+**If the `.exe` is missing after you unzip**, Windows Security probably removed it: see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 ## Features
 
