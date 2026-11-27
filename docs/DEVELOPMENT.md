@@ -26,6 +26,7 @@ Every push runs `.github/workflows/build.yml` on a clean Windows machine:
 | --- | --- |
 | Restore + Build (Release) | Everything compiles, including the WPF app and its XAML |
 | Unit tests | Timer engine, scheduling, recurrence, statistics, view-models, CSV export, demo data |
+| **XAML binding tests** (`Presentation/XamlBindingTests.cs`) | Reads the real XAML and fails on a two-way binding to a read-only property (a startup crash WPF only reports when the page opens) or a binding to a property no view-model has |
 | **Integration tests** (`tests/.../Integration`) | The real SQLite layer: migrations, every repository query, constraints, settings, timer snapshot, backups, and a full "finish a focus session" run. Also proves the pinned native SQLite library loads |
 | Portable + Installer jobs | A real `Charlie-MJ-Focus.exe` and `Charlie-MJ-Focus-Setup-<version>.exe` are produced |
 | **Smoke test** (`scripts/smoke-test.ps1`) | The portable EXE is launched nine times (every page, light/dark, Mica). It fails on an early exit or any `[ERROR]` in the log, and uploads screenshots |

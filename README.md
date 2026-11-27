@@ -116,7 +116,7 @@ Charlie-MJ-Focus/
 │   ├── CharlieMJFocus.Infrastructure/  SQLite, backups, logging, file export
 │   ├── CharlieMJFocus.Presentation/    View-models and UI logic (no WPF, fully testable)
 │   └── CharlieMJFocus.App/             The WPF shell: views, theming, tray, hotkeys, Windows effects
-├── tests/CharlieMJFocus.Tests/         149 tests: unit tests and real-SQLite integration tests (xUnit)
+├── tests/CharlieMJFocus.Tests/         152 tests: unit tests and real-SQLite integration tests (xUnit)
 ├── assets/                             Logo, icon and branding (see docs/BRANDING.md)
 ├── docs/                               Architecture, database, development guide, feature status
 ├── scripts/                            build / publish / clean (PowerShell)

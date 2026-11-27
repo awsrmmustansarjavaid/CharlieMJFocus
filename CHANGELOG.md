@@ -13,9 +13,13 @@ First version of Charlie MJ Focus.
 - **Downloads built by CI:** `Charlie-MJ-Focus.exe` (portable, single file) and `Charlie-MJ-Focus-Setup-<version>.exe`
   (installer), published as named artifacts and attached to GitHub Releases on version tags.
 - **Launch test in CI:** the portable EXE is started for every page and theme, with screenshots and a log check.
-- **Integration tests** against a real SQLite database (17 tests) in addition to the unit tests (132).
+- **Integration tests** against a real SQLite database (17 tests) in addition to the unit tests (135).
 - Startup options `--demo`, `--page`, `--theme`, `--backdrop`; sample-data generator for demos.
 - Main window no longer opens taller than a 1366 x 768 screen.
+
+### Fixed
+- Opening the Dashboard crashed at startup: a progress bar bound two-way to a read-only property. Found by the CI
+  launch test; a new XAML binding test now prevents this whole class of mistake.
 
 ### Security
 - Overrode the bundled native SQLite with `SQLitePCLRaw.lib.e_sqlite3` 3.50.3, fixing GHSA-2m69-gcr7-jv3q / CVE-2025-6965.
